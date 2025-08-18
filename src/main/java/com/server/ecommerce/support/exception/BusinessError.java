@@ -17,7 +17,10 @@ public enum BusinessError {
 	POINT_INVALID_CHARGE_AMOUNT(BAD_REQUEST, "충전 금액은 0보다 커야 합니다."),
 	POINT_INVALID_USE_AMOUNT(BAD_REQUEST, "사용 금액은 0보다 커야 합니다."),
 	POINT_INSUFFICIENT_BALANCE(BAD_REQUEST, "포인트가 부족합니다."),
-	POINT_ACCOUNT_NOT_FOUND(BAD_REQUEST, "포인트 계정이 존재하지 않습니다.");
+	POINT_ACCOUNT_NOT_FOUND(BAD_REQUEST, "포인트 계정이 존재하지 않습니다."),
+
+	// 장바구니 관련 Error
+	CART_NOT_FOUND(BAD_REQUEST, "장바구니 항목을 찾을 수 없습니다.");
 
 	private final HttpStatus httpStatus;
 	private final String message;
