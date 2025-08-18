@@ -43,4 +43,15 @@ public class Product extends BaseEntity {
     public static Product create(String name, Integer stock, Long price, String content) {
         return new Product(name, stock, price, content);
     }
+
+    public void decreaseStock(Integer quantity) {
+        if (this.stock < quantity) {
+            throw new IllegalArgumentException("재고가 부족합니다. 현재 재고: " + this.stock + ", 요청 수량: " + quantity);
+        }
+        this.stock -= quantity;
+    }
+
+    public boolean hasEnoughStock(Integer quantity) {
+        return this.stock >= quantity;
+    }
 }
