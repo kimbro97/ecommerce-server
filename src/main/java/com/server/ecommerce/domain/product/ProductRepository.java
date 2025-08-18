@@ -10,4 +10,8 @@ public interface ProductRepository {
     Page<Product> findAll(Pageable pageable);
     
     Optional<Product> findById(Long productId);
+    
+    Optional<Product> findByIdWithPessimisticLock(Long productId);
+    
+    Product save(Product product);
 }

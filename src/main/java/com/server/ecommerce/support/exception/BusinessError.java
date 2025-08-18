@@ -20,7 +20,13 @@ public enum BusinessError {
 	POINT_ACCOUNT_NOT_FOUND(BAD_REQUEST, "포인트 계정이 존재하지 않습니다."),
 
 	// 장바구니 관련 Error
-	CART_NOT_FOUND(BAD_REQUEST, "장바구니 항목을 찾을 수 없습니다.");
+	CART_NOT_FOUND(BAD_REQUEST, "장바구니 항목을 찾을 수 없습니다."),
+
+	// 주문 관련 Error
+	ORDER_NOT_FOUND(BAD_REQUEST, "주문을 찾을 수 없습니다."),
+	INVALID_CART_ACCESS(BAD_REQUEST, "다른 사용자의 장바구니에 접근할 수 없습니다."),
+	PRODUCT_NOT_FOUND(BAD_REQUEST, "상품을 찾을 수 없습니다."),
+	INSUFFICIENT_STOCK(BAD_REQUEST, "재고가 부족합니다.");
 
 	private final HttpStatus httpStatus;
 	private final String message;
