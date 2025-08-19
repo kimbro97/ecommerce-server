@@ -25,8 +25,15 @@ public enum BusinessError {
 	// 주문 관련 Error
 	ORDER_NOT_FOUND(BAD_REQUEST, "주문을 찾을 수 없습니다."),
 	INVALID_CART_ACCESS(BAD_REQUEST, "다른 사용자의 장바구니에 접근할 수 없습니다."),
+	INVALID_ORDER_ACCESS(BAD_REQUEST, "다른 사용자의 주문에 접근할 수 없습니다."),
+	INVALID_ORDER_STATUS(BAD_REQUEST, "주문 상태가 결제 가능한 상태가 아닙니다."),
 	PRODUCT_NOT_FOUND(BAD_REQUEST, "상품을 찾을 수 없습니다."),
-	INSUFFICIENT_STOCK(BAD_REQUEST, "재고가 부족합니다.");
+	INSUFFICIENT_STOCK(BAD_REQUEST, "재고가 부족합니다."),
+
+	// 결제 관련 Error
+	PAYMENT_NOT_FOUND(BAD_REQUEST, "결제 정보를 찾을 수 없습니다."),
+	PAYMENT_ALREADY_COMPLETED(BAD_REQUEST, "이미 결제가 완료된 주문입니다."),
+	UNSUPPORTED_PAYMENT_METHOD(BAD_REQUEST, "지원하지 않는 결제 수단입니다.");
 
 	private final HttpStatus httpStatus;
 	private final String message;
