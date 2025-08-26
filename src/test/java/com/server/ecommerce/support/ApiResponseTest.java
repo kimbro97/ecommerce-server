@@ -157,6 +157,65 @@ class ApiResponseTest {
 		assertThat(apiResponse.getData()).isEqualTo(testData);
 	}
 
+	@Test
+	@DisplayName("BusinessException 메서드는 지정된 상태코드와 메시지로 에러 응답을 생성한다")
+	void business_exception_response() {
+		// arrange
+		String errorMessage = "비즈니스 로직 오류가 발생했습니다.";
+
+		// act
+		ResponseEntity<ApiResponse<Void>> response = ApiResponse.BusinessException(BAD_REQUEST, errorMessage);
+
+		// assert
+		assertThat(response.getStatusCode()).isEqualTo(BAD_REQUEST);
+		assertThat(response.getBody()).isNotNull();
+		assertThat(response.getBody().getHttpStatus()).isEqualTo(BAD_REQUEST);
+		assertThat(response.getBody().getHttpStatusCode()).isEqualTo(400);
+		assertThat(response.getBody().getMessage()).isEqualTo(errorMessage);
+		assertThat(response.getBody().getData()).isNull();
+	}
+
+	@Test
+	@DisplayName("ValidationException 메서드는 지정된 상태코드와 메시지로 검증 에러 응답을 생성한다")
+	void validation_exception_response() {
+		// arrange
+		String errorMessage = "입력값 검증에 실패했습니다.";
+
+		// act
+		ResponseEntity<ApiResponse<Void>> response = ApiResponse.ValidationException(UNPROCESSABLE_ENTITY, errorMessage);
+
+		// assert
+		assertThat(response.getStatusCode()).isEqualTo(UNPROCESSABLE_ENTITY);
+		assertThat(response.getBody()).isNotNull();
+		assertThat(response.getBody().getHttpStatus()).isEqualTo(UNPROCESSABLE_ENTITY);
+		assertThat(response.getBody().getHttpStatusCode()).isEqualTo(422);
+		assertThat(response.getBody().getMessage()).isEqualTo(errorMessage);
+		assertThat(response.getBody().getData()).isNull();
+	}
+
+	@Test
+	@DisplayName("BusinessException과 ValidationException 메서드는 다양한 HTTP 상태코드를 지원한다")
+	void exception_methods_support_various_http_status() {
+		// arrange
+		String businessMessage = "상품을 찾을 수 없습니다.";
+		String validationMessage = "필수 항목이 누락되었습니다.";
+
+		// act
+		ResponseEntity<ApiResponse<Void>> notFoundResponse = ApiResponse.BusinessException(NOT_FOUND, businessMessage);
+		ResponseEntity<ApiResponse<Void>> badRequestResponse = ApiResponse.ValidationException(BAD_REQUEST, validationMessage);
+
+		// assert
+		assertThat(notFoundResponse.getBody()).isNotNull();
+		assertThat(notFoundResponse.getStatusCode()).isEqualTo(NOT_FOUND);
+		assertThat(notFoundResponse.getBody().getHttpStatusCode()).isEqualTo(404);
+		assertThat(notFoundResponse.getBody().getMessage()).isEqualTo(businessMessage);
+
+		assertThat(badRequestResponse.getBody()).isNotNull();
+		assertThat(badRequestResponse.getStatusCode()).isEqualTo(BAD_REQUEST);
+		assertThat(badRequestResponse.getBody().getHttpStatusCode()).isEqualTo(400);
+		assertThat(badRequestResponse.getBody().getMessage()).isEqualTo(validationMessage);
+	}
+
 	// 테스트용 내부 클래스
 	static class TestDto {
 		private String name;
