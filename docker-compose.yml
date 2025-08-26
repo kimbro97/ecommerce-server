@@ -1,0 +1,15 @@
+version: '1'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: allra-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: allra_ecommerce
+      MYSQL_USER: user
+      MYSQL_PASSWORD: 1234
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data/mysql:/var/lib/mysql
