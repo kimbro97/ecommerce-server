@@ -43,4 +43,14 @@ public class ApiResponse<T> {
 		return ResponseEntity.status(CREATED)
 			.body(new ApiResponse<>(CREATED, CREATED.value(), message, data));
 	}
+
+	public static <T> ResponseEntity<ApiResponse<T>> BusinessException(HttpStatus httpStatus, String message) {
+		return ResponseEntity.status(httpStatus)
+			.body(new ApiResponse<>(httpStatus, httpStatus.value(), message, null));
+	}
+
+	public static <T> ResponseEntity<ApiResponse<T>> ValidationException(HttpStatus httpStatus, String message) {
+		return ResponseEntity.status(httpStatus)
+			.body(new ApiResponse<>(httpStatus, httpStatus.value(), message, null));
+	}
 }
