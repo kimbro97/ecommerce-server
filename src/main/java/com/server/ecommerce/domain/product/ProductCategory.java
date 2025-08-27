@@ -18,4 +18,15 @@ public enum ProductCategory {
 	ProductCategory(String displayName) {
 		this.displayName = displayName;
 	}
+
+	public static ProductCategory parseCategory(String displayName) {
+		if (displayName == null) {
+			return null;
+		}
+		try {
+			return ProductCategory.valueOf(displayName);
+		} catch (IllegalArgumentException e) {
+			throw PRODUCT_CATEGORY_NOT_VALID.exception();
+		}
+	}
 }
