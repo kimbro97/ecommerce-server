@@ -1,14 +1,17 @@
 package com.server.ecommerce.service.cart;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.server.ecommerce.domain.cart.Cart;
+import com.server.ecommerce.domain.cart.dto.CartWithProductDto;
 import com.server.ecommerce.infra.cart.CartJpaRepository;
 import com.server.ecommerce.service.cart.command.AddCartCommand;
 import com.server.ecommerce.service.cart.info.CartInfo;
+import com.server.ecommerce.service.cart.info.CartWithProductInfo;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,6 +38,14 @@ public class CartService {
 		Cart newCart = Cart.create(command.getUserId(), command.getProductId(), command.getQuantity());
 		cartJpaRepository.save(newCart);
 		return CartInfo.from(newCart) ;
+	}
+
+	public List<CartWithProductInfo> findCarts(Long userId) {
+		List<CartWithProductDto> carts = cartJpaRepository.findCartListWithProductByUserId(
+			userId);
+		return carts.stream()
+			.map(CartWithProductInfo::from)
+			.toList();
 	}
 
 }
