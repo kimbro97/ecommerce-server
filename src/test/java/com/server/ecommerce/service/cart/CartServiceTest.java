@@ -2,6 +2,9 @@ package com.server.ecommerce.service.cart;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +12,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.server.ecommerce.domain.cart.Cart;
+import com.server.ecommerce.domain.product.Product;
+import com.server.ecommerce.domain.product.ProductCategory;
 import com.server.ecommerce.infra.cart.CartJpaRepository;
+import com.server.ecommerce.infra.product.ProductJpaRepository;
 import com.server.ecommerce.service.cart.command.AddCartCommand;
 import com.server.ecommerce.service.cart.info.CartInfo;
+import com.server.ecommerce.service.cart.info.CartWithProductInfo;
 import com.server.ecommerce.support.exception.BusinessException;
 
 @Transactional
@@ -20,6 +27,9 @@ class CartServiceTest {
 
 	@Autowired
 	private CartService cartService;
+
+	@Autowired
+	private ProductJpaRepository productJpaRepository;
 
 	@Autowired
 	private CartJpaRepository cartJpaRepository;
@@ -92,5 +102,36 @@ class CartServiceTest {
 
 		assertThatThrownBy(() -> cartService.addCart(command)).isInstanceOf(BusinessException.class)
 			.hasMessageContaining("유효하지 않은 수량입니다");
+	}
+
+	@Test
+	@DisplayName("userId로 장바구니를 상품정보와함께 조회할 수 있다")
+	void find_carts() {
+		Long userId = 1L;
+
+		Product product1 = Product.create("맥북 에어", BigDecimal.valueOf(1000000), "최신형 맥북", ProductCategory.ELECTRONICS, 0);
+		Product product2 = Product.create("맥북 프로", BigDecimal.valueOf(1000000), "최신형 맥북", ProductCategory.ELECTRONICS, 40);
+
+		productJpaRepository.save(product1);
+		productJpaRepository.save(product2);
+
+		Cart cart1 = Cart.create(userId, product1.getId(), 3);
+		Cart cart2 = Cart.create(userId, product2.getId(), 4);
+
+		cartJpaRepository.save(cart1);
+		cartJpaRepository.save(cart2);
+
+		List<CartWithProductInfo> carts = cartService.findCarts(userId);
+
+		assertThat(carts).hasSize(2);
+		assertThat(carts.get(0).getUserId()).isEqualTo(userId);
+		assertThat(carts.get(0).getProductId()).isEqualTo(product1.getId());
+		assertThat(carts.get(0).getQuantity()).isEqualTo(3);
+		assertThat(carts.get(0).isSoldOut()).isEqualTo(true);
+		assertThat(carts.get(1).getUserId()).isEqualTo(userId);
+		assertThat(carts.get(1).getProductId()).isEqualTo(product2.getId());
+		assertThat(carts.get(1).getQuantity()).isEqualTo(4);
+		assertThat(carts.get(1).isSoldOut()).isEqualTo(false);
+
 	}
 }
