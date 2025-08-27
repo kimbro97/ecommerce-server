@@ -10,4 +10,5 @@ import com.server.ecommerce.domain.cart.Cart;
 public interface CartJpaRepository extends JpaRepository<Cart, Long> {
 	Optional<Cart> findByProductId(Long productId);
 	List<Cart> findAllByUserId(Long userId);
+	Optional<Cart> findByUserIdAndProductId(Long userId, Long productId);
 }

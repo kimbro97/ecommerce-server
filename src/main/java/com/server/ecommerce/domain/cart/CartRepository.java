@@ -7,5 +7,6 @@ public interface CartRepository {
 	Cart save(Cart cart);
 	Optional<Cart> findById(Long cartId);
 	Optional<Cart> findByProductId(Long productId);
+	Optional<Cart> findByUserIdAndProductId(Long userId, Long productId);
 	List<Cart> findAllByUserId(Long userId);
 }
