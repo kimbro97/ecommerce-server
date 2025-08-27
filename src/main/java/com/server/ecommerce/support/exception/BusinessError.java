@@ -9,6 +9,8 @@ import lombok.Getter;
 @Getter
 public enum BusinessError {
 
+	PRODUCT_CATEGORY_NOT_VALID(BAD_REQUEST, "유효하지않은 카테고리값입니다"),
+
 	TEST_ERROR(BAD_REQUEST, "test error");
 
 	private final HttpStatus httpStatus;
