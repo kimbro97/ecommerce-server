@@ -10,6 +10,7 @@ import lombok.Getter;
 public enum BusinessError {
 
 	PRODUCT_CATEGORY_NOT_VALID(BAD_REQUEST, "유효하지않은 카테고리값입니다"),
+	CART_QUANTITY_INVALID(BAD_REQUEST, "유효하지 않은 수량입니다"),
 
 	TEST_ERROR(BAD_REQUEST, "test error");
 
