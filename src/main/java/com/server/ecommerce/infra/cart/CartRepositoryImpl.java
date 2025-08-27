@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.server.ecommerce.domain.cart.Cart;
 import com.server.ecommerce.domain.cart.CartRepository;
+import com.server.ecommerce.domain.cart.dto.CartWithProductDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -37,7 +38,7 @@ public class CartRepositoryImpl implements CartRepository {
 	}
 
 	@Override
-	public List<Cart> findAllByUserId(Long userId) {
-		return cartJpaRepository.findAllByUserId(userId);
+	public List<CartWithProductDto> findAllByUserId(Long userId) {
+		return cartJpaRepository.findCartListWithProductByUserId(userId);
 	}
 }
