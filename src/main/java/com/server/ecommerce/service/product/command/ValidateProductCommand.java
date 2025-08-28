@@ -1,4 +1,4 @@
-package com.server.ecommerce.service.product;
+package com.server.ecommerce.service.product.command;
 
 import java.util.List;
 
