@@ -33,4 +33,17 @@ public class Payment {
 	@Column(nullable = false, precision = 10, scale = 2)
 	private BigDecimal payAmount;
 
+	private Payment(Long userId, Long orderId, BigDecimal payAmount) {
+		this.userId = userId;
+		this.orderId = orderId;
+		this.payAmount = payAmount;
+	}
+
+	public static Payment create(Long userId, Long orderId, BigDecimal payAmount) {
+		return new Payment(userId, orderId, payAmount);
+	}
+
+	public void pay(String transactionId) {
+		this.transactionId =  transactionId;
+	}
 }

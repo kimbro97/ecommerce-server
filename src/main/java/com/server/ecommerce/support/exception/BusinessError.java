@@ -14,6 +14,7 @@ public enum BusinessError {
 	CART_NOT_FOUND(NOT_FOUND, "해당 장바구니를 찾을 수 없습니다"),
 	PRODUCT_NOT_FOUND(NOT_FOUND, "해당 상품을 찾을 수 없습니다"),
 	ORDER_LIEN_IS_EMPTY(NOT_FOUND, "주문 항목을 찾을 수 없습니다"),
+	PAY_FAILED(BAD_REQUEST, "결제에 실패했습니다"),
 
 	TEST_ERROR(BAD_REQUEST, "test error");
 
