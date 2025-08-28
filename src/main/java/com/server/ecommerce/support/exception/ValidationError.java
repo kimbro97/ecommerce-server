@@ -20,6 +20,8 @@ public enum ValidationError {
 	ADD_CART_PRODUCT_ID_REQUIRED(BAD_REQUEST, "productId는 필수 값 입니다"),
 	ADD_CART_QUANTITY_REQUIRED(BAD_REQUEST, "수량은 필수 값 입니다"),
 	ADD_CART_QUANTITY_INVALID(BAD_REQUEST, "수량은 0 이상이여 합니다"),
+	DELETE_CART_USER_ID_REQUIRED(BAD_REQUEST, "userId는 필수 값 입니다"),
+	DELETE_CART_CART_ID_REQUIRED(BAD_REQUEST, "cartId는 필수 값 입니다"),
 
 	TEST_ERROR(BAD_REQUEST, "test error");
 
