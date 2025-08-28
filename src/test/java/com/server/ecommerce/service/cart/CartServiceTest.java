@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.server.ecommerce.domain.cart.Cart;
+import com.server.ecommerce.domain.cart.dto.CartWithProductDto;
 import com.server.ecommerce.domain.product.Product;
 import com.server.ecommerce.domain.product.ProductCategory;
 import com.server.ecommerce.infra.cart.CartJpaRepository;
@@ -133,5 +134,49 @@ class CartServiceTest {
 		assertThat(carts.get(1).getQuantity()).isEqualTo(4);
 		assertThat(carts.get(1).isSoldOut()).isEqualTo(false);
 
+	}
+
+	@Test
+	@DisplayName("userId와 cartId를 받아서 장바구니를 삭제할 수 있다.")
+	void delete_cart() {
+		Long userId = 1L;
+
+		Product product1 = Product.create("맥북 에어", BigDecimal.valueOf(1000000), "최신형 맥북", ProductCategory.ELECTRONICS, 0);
+		Product product2 = Product.create("맥북 프로", BigDecimal.valueOf(1000000), "최신형 맥북", ProductCategory.ELECTRONICS, 40);
+
+		productJpaRepository.save(product1);
+		productJpaRepository.save(product2);
+
+		Cart cart1 = Cart.create(userId, product1.getId(), 3);
+		Cart cart2 = Cart.create(userId, product2.getId(), 4);
+
+		cartJpaRepository.save(cart1);
+		cartJpaRepository.save(cart2);
+
+		List<CartWithProductDto> carts1 = cartJpaRepository.findCartListWithProductByUserId(userId);
+
+		assertThat(carts1).hasSize(2);
+
+		DeleteCartCommand command = new DeleteCartCommand(userId, cart1.getId());
+		cartService.deleteCart(command);
+
+
+		List<CartWithProductDto> carts2 = cartJpaRepository.findCartListWithProductByUserId(userId);
+
+		assertThat(carts2).hasSize(1);
+	}
+
+	@Test
+	@DisplayName("장바구니 정보가 없다면 예외가 발생한다")
+	void delete_cart_exception() {
+		Long userId = 1L;
+		Long cartId = 1L;
+
+		DeleteCartCommand command = new DeleteCartCommand(userId, cartId);
+
+		assertThatThrownBy(() -> cartService.deleteCart(command))
+			.isInstanceOf(BusinessException.class)
+			.hasMessageContaining("해당 장바구니를 찾을 수 없습니다")
+		;
 	}
 }
