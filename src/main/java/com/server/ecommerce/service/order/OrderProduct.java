@@ -2,6 +2,8 @@ package com.server.ecommerce.service.order;
 
 import java.math.BigDecimal;
 
+import com.server.ecommerce.service.cart.info.CartWithProductInfo;
+
 import lombok.Getter;
 
 @Getter
@@ -14,5 +16,9 @@ public class OrderProduct {
 		this.productId = productId;
 		this.quantity = quantity;
 		this.price = price;
+	}
+
+	public static OrderProduct from(CartWithProductInfo info) {
+		return new OrderProduct(info.getProductId(), info.getQuantity(), info.getProductPrice());
 	}
 }
