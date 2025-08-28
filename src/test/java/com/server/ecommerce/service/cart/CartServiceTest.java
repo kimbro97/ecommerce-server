@@ -18,6 +18,7 @@ import com.server.ecommerce.domain.product.ProductCategory;
 import com.server.ecommerce.infra.cart.CartJpaRepository;
 import com.server.ecommerce.infra.product.ProductJpaRepository;
 import com.server.ecommerce.service.cart.command.AddCartCommand;
+import com.server.ecommerce.service.cart.command.UpdateCartCommand;
 import com.server.ecommerce.service.cart.info.CartInfo;
 import com.server.ecommerce.service.cart.info.CartWithProductInfo;
 import com.server.ecommerce.support.exception.BusinessException;
@@ -178,5 +179,62 @@ class CartServiceTest {
 			.isInstanceOf(BusinessException.class)
 			.hasMessageContaining("해당 장바구니를 찾을 수 없습니다")
 		;
+	}
+
+	@Test
+	@DisplayName("userId, cartId, quantity를 받아서 장바구니의 수량을 변경할 수 있다")
+	void update_cart() {
+		Long userId = 1L;
+
+		Product product1 = Product.create("맥북 프로", BigDecimal.valueOf(1000000), "최신형 맥북", ProductCategory.ELECTRONICS, 40);
+
+		productJpaRepository.save(product1);
+
+		Cart cart = Cart.create(userId, product1.getId(), 3);
+
+		cartJpaRepository.save(cart);
+
+		UpdateCartCommand command = new UpdateCartCommand(userId, cart.getId(), 5);
+
+		cartService.updateCart(command);
+
+		assertThat(cart.getQuantity()).isEqualTo(5);
+	}
+
+	@Test
+	@DisplayName("변경할 수량이 1이하이면 예외가 발생한다")
+	void update_cart_quantity_exception() {
+		Long userId = 1L;
+
+		Product product1 = Product.create("맥북 프로", BigDecimal.valueOf(1000000), "최신형 맥북", ProductCategory.ELECTRONICS, 40);
+
+		productJpaRepository.save(product1);
+
+		Cart cart = Cart.create(userId, product1.getId(), 5);
+
+		cartJpaRepository.save(cart);
+
+		UpdateCartCommand command = new UpdateCartCommand(userId, cart.getId(), 1);
+
+		assertThatThrownBy(() -> cartService.updateCart(command))
+			.isInstanceOf(BusinessException.class)
+			.hasMessageContaining("유효하지 않은 수량입니다");
+
+	}
+
+
+	@Test
+	@DisplayName("장바구니 정보가 없다면 예외가 발생한다")
+	void update_cart_not_found_exception() {
+		Long userId = 1L;
+		Long cartId = 1L;
+
+		UpdateCartCommand command = new UpdateCartCommand(userId, cartId, 1);
+
+		assertThatThrownBy(() -> cartService.updateCart(command))
+			.isInstanceOf(BusinessException.class)
+			.hasMessageContaining("해당 장바구니를 찾을 수 없습니다")
+		;
+
 	}
 }
