@@ -26,4 +26,9 @@ public class ProductRepositoryImpl implements ProductRepository {
 	public List<Product> findAllByIds(List<Long> ids) {
 		return productJpaRepository.findAllByIdIn(ids);
 	}
+
+	@Override
+	public List<Product> findAllByIdsWithLock(List<Long> ids) {
+		return productJpaRepository.findAllByIdsWithLock(ids);
+	}
 }
