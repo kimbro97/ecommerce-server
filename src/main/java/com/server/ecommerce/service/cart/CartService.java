@@ -12,6 +12,7 @@ import com.server.ecommerce.domain.cart.Cart;
 import com.server.ecommerce.domain.cart.CartRepository;
 import com.server.ecommerce.domain.cart.dto.CartWithProductDto;
 import com.server.ecommerce.service.cart.command.AddCartCommand;
+import com.server.ecommerce.service.cart.command.UpdateCartCommand;
 import com.server.ecommerce.service.cart.info.CartInfo;
 import com.server.ecommerce.service.cart.info.CartWithProductInfo;
 
@@ -64,6 +65,19 @@ public class CartService {
 			.orElseThrow(CART_NOT_FOUND::exception);
 
 		cartRepository.deleteByUserIdAndCartId(command.getUserId(), command.getCartId());
+
+		return CartInfo.from(cart);
+	}
+
+	@Transactional
+	public CartInfo updateCart(UpdateCartCommand command) {
+
+		// 유저 유효성 검사
+
+		Cart cart = cartRepository.findByUserIdAndCartId(command.getUserId(), command.getCartId())
+			.orElseThrow(CART_NOT_FOUND::exception);
+
+		cart.updateQuantity(command.getQuantity());
 
 		return CartInfo.from(cart);
 	}
