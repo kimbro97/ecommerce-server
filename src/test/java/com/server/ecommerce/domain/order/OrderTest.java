@@ -65,4 +65,44 @@ class OrderTest {
 		assertThat(orderLine1.getOrder()).isEqualTo(order);
 		assertThat(orderLine2.getOrder()).isEqualTo(order);
 	}
+
+	@Test
+	@DisplayName("complete 메서드를 호출하면 status가 COMPLETE로 변경된다")
+	void order_complete() {
+		Long userId = 1L;
+		Order order = Order.create(userId);
+
+		OrderLine orderLine1 = OrderLine.create(1L, 3, BigDecimal.valueOf(10000));
+		OrderLine orderLine2 = OrderLine.create(2L, 1, BigDecimal.valueOf(10000));
+
+		order.addOrderLine(orderLine1);
+		order.addOrderLine(orderLine2);
+
+		order.calculateTotalPrice();
+		assertThat(order.getStatus()).isEqualTo(OrderStatus.PENDING);
+		assertThat(order.getPaidAt()).isNull();
+
+		order.complete();
+		assertThat(order.getStatus()).isEqualTo(OrderStatus.COMPLETE);
+		assertThat(order.getPaidAt()).isNotNull();
+	}
+
+	@Test
+	@DisplayName("이미 상태가 complete인 주문이 complete 메서드를 실행하면 예외가 발생한다")
+	void order_complete_exception() {
+		Long userId = 1L;
+		Order order = Order.create(userId);
+
+		OrderLine orderLine1 = OrderLine.create(1L, 3, BigDecimal.valueOf(10000));
+		OrderLine orderLine2 = OrderLine.create(2L, 1, BigDecimal.valueOf(10000));
+
+		order.addOrderLine(orderLine1);
+		order.addOrderLine(orderLine2);
+
+		order.calculateTotalPrice();
+		order.complete();
+
+		assertThatThrownBy(order::complete)
+			.isInstanceOf(BusinessException.class);
+	}
 }
