@@ -82,4 +82,7 @@ public class CartService {
 		return CartInfo.from(cart);
 	}
 
+	public void clearCart(ClearCartCommand command) {
+		cartRepository.deleteByIds(command.getCartIds());
+	}
 }

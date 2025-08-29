@@ -1,5 +1,6 @@
 package com.server.ecommerce.infra.cart;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,4 +12,5 @@ public interface CartJpaRepository extends JpaRepository<Cart, Long>, CartJpaRep
 	Optional<Cart> findByUserIdAndProductId(Long userId, Long productId);
 	Optional<Cart> findByUserIdAndId(Long userId, Long cartId);
 	void deleteByUserIdAndId(Long userId, Long cartId);
+	void deleteByIdIn(List<Long> cartIds);
 }
