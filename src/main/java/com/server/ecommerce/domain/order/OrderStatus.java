@@ -5,7 +5,8 @@ import lombok.Getter;
 @Getter
 public enum OrderStatus {
 
-	PENDING("결제대기");
+	PENDING("결제대기"),
+	COMPLETE("결제완료");
 
 	private final String description;
 

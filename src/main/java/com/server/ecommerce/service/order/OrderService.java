@@ -6,8 +6,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.server.ecommerce.domain.order.Order;
 import com.server.ecommerce.domain.order.OrderLine;
 import com.server.ecommerce.domain.order.OrderRepository;
+import com.server.ecommerce.service.order.command.CompleteOrderCommand;
 import com.server.ecommerce.service.order.command.CreateOrderCommand;
 import com.server.ecommerce.service.order.info.OrderInfo;
+import com.server.ecommerce.support.exception.BusinessError;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,6 +32,16 @@ public class OrderService {
 
 		order.calculateTotalPrice();
 		orderRepository.save(order);
+
+		return OrderInfo.from(order);
+	}
+
+	public OrderInfo completeOrder(CompleteOrderCommand command) {
+
+		Order order = orderRepository.findById(command.getOrderId())
+			.orElseThrow(BusinessError.ORDER_NOT_FOUND::exception);
+
+		order.complete();
 
 		return OrderInfo.from(order);
 	}

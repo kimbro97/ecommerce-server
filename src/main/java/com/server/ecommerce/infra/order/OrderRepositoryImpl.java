@@ -1,5 +1,7 @@
 package com.server.ecommerce.infra.order;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Repository;
 
 import com.server.ecommerce.domain.order.Order;
@@ -16,5 +18,10 @@ public class OrderRepositoryImpl implements OrderRepository {
 	@Override
 	public Order save(Order order) {
 		return orderJpaRepository.save(order);
+	}
+
+	@Override
+	public Optional<Order> findById(Long orderId) {
+		return orderJpaRepository.findById(orderId);
 	}
 }
