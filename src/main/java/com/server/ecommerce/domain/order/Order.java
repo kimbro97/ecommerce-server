@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.server.ecommerce.domain.BaseEntity;
+import com.server.ecommerce.support.exception.BusinessError;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -88,5 +89,13 @@ public class Order extends BaseEntity {
 		this.totalPrice = this.orderLines.stream()
 			.map(OrderLine::getTotalPrice)
 			.reduce(BigDecimal.ZERO, BigDecimal::add);
+	}
+
+	public void complete() {
+		if (this.status == COMPLETE) {
+			throw ORDER_ALREADY_COMPLETED.exception();
+		}
+		this.status = COMPLETE;
+		this.paidAt = LocalDateTime.now();
 	}
 }
