@@ -1,8 +1,11 @@
 package com.server.ecommerce.domain.product;
 
+import static com.server.ecommerce.support.exception.BusinessError.*;
+
 import java.math.BigDecimal;
 
 import com.server.ecommerce.domain.BaseEntity;
+import com.server.ecommerce.support.exception.BusinessError;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -59,5 +62,16 @@ public class Product extends BaseEntity {
 			.category(category)
 			.stock(stock)
 			.build();
+	}
+
+	public void decreaseStock(Integer quantity) {
+		decreaseStockValidate(quantity);
+		this.stock = this.stock - quantity;
+	}
+
+	private void decreaseStockValidate(Integer quantity) {
+		if (this.stock == 0 || this.stock < quantity) {
+			throw PRODUCT_OUT_OF_STOCK.exception();
+		}
 	}
 }

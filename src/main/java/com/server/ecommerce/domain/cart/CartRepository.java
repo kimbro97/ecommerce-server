@@ -13,4 +13,6 @@ public interface CartRepository {
 	List<CartWithProductDto> findAllByUserId(Long userId);
 	Optional<Cart> findByUserIdAndCartId(Long userId, Long cartId);
 	void deleteByUserIdAndCartId(Long userId, Long cartId);
+
+	void deleteByIds(List<Long> cartIds);
 }

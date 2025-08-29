@@ -1,5 +1,7 @@
 package com.server.ecommerce.infra.product;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Repository;
 
@@ -18,5 +20,15 @@ public class ProductRepositoryImpl implements ProductRepository {
 	@Override
 	public Page<Product> searchProducts(ProductSearchCondition condition) {
 		return productJpaRepository.searchProducts(condition);
+	}
+
+	@Override
+	public List<Product> findAllByIds(List<Long> ids) {
+		return productJpaRepository.findAllByIdIn(ids);
+	}
+
+	@Override
+	public List<Product> findAllByIdsWithLock(List<Long> ids) {
+		return productJpaRepository.findAllByIdsWithLock(ids);
 	}
 }

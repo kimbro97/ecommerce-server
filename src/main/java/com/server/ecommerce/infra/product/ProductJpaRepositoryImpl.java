@@ -17,6 +17,7 @@ import com.server.ecommerce.domain.product.ProductCategory;
 import com.server.ecommerce.domain.product.condition.ProductSearchCondition;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 
 public class ProductJpaRepositoryImpl implements ProductJpaRepositoryCustom {
 
@@ -50,6 +51,14 @@ public class ProductJpaRepositoryImpl implements ProductJpaRepositoryCustom {
 			);
 
 		return PageableExecutionUtils.getPage(content, condition.getPageable(), countQuery::fetchOne);
+	}
+
+	@Override
+	public List<Product> findAllByIdsWithLock(List<Long> ids) {
+		return queryFactory.selectFrom(product)
+			.where(product.id.in(ids))
+			.setLockMode(LockModeType.PESSIMISTIC_WRITE)
+			.fetch();
 	}
 
 	private BooleanExpression categoryEq(ProductCategory category) {

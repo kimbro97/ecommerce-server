@@ -111,8 +111,10 @@ class CartServiceTest {
 	void find_carts() {
 		Long userId = 1L;
 
-		Product product1 = Product.create("맥북 에어", BigDecimal.valueOf(1000000), "최신형 맥북", ProductCategory.ELECTRONICS, 0);
-		Product product2 = Product.create("맥북 프로", BigDecimal.valueOf(1000000), "최신형 맥북", ProductCategory.ELECTRONICS, 40);
+		Product product1 = Product.create("맥북 에어", BigDecimal.valueOf(1000000), "최신형 맥북", ProductCategory.ELECTRONICS,
+			0);
+		Product product2 = Product.create("맥북 프로", BigDecimal.valueOf(1000000), "최신형 맥북", ProductCategory.ELECTRONICS,
+			40);
 
 		productJpaRepository.save(product1);
 		productJpaRepository.save(product2);
@@ -142,8 +144,10 @@ class CartServiceTest {
 	void delete_cart() {
 		Long userId = 1L;
 
-		Product product1 = Product.create("맥북 에어", BigDecimal.valueOf(1000000), "최신형 맥북", ProductCategory.ELECTRONICS, 0);
-		Product product2 = Product.create("맥북 프로", BigDecimal.valueOf(1000000), "최신형 맥북", ProductCategory.ELECTRONICS, 40);
+		Product product1 = Product.create("맥북 에어", BigDecimal.valueOf(1000000), "최신형 맥북", ProductCategory.ELECTRONICS,
+			0);
+		Product product2 = Product.create("맥북 프로", BigDecimal.valueOf(1000000), "최신형 맥북", ProductCategory.ELECTRONICS,
+			40);
 
 		productJpaRepository.save(product1);
 		productJpaRepository.save(product2);
@@ -160,7 +164,6 @@ class CartServiceTest {
 
 		DeleteCartCommand command = new DeleteCartCommand(userId, cart1.getId());
 		cartService.deleteCart(command);
-
 
 		List<CartWithProductDto> carts2 = cartJpaRepository.findCartListWithProductByUserId(userId);
 
@@ -186,7 +189,8 @@ class CartServiceTest {
 	void update_cart() {
 		Long userId = 1L;
 
-		Product product1 = Product.create("맥북 프로", BigDecimal.valueOf(1000000), "최신형 맥북", ProductCategory.ELECTRONICS, 40);
+		Product product1 = Product.create("맥북 프로", BigDecimal.valueOf(1000000), "최신형 맥북", ProductCategory.ELECTRONICS,
+			40);
 
 		productJpaRepository.save(product1);
 
@@ -206,7 +210,8 @@ class CartServiceTest {
 	void update_cart_quantity_exception() {
 		Long userId = 1L;
 
-		Product product1 = Product.create("맥북 프로", BigDecimal.valueOf(1000000), "최신형 맥북", ProductCategory.ELECTRONICS, 40);
+		Product product1 = Product.create("맥북 프로", BigDecimal.valueOf(1000000), "최신형 맥북", ProductCategory.ELECTRONICS,
+			40);
 
 		productJpaRepository.save(product1);
 
@@ -222,7 +227,6 @@ class CartServiceTest {
 
 	}
 
-
 	@Test
 	@DisplayName("장바구니 정보가 없다면 예외가 발생한다")
 	void update_cart_not_found_exception() {
@@ -236,5 +240,20 @@ class CartServiceTest {
 			.hasMessageContaining("해당 장바구니를 찾을 수 없습니다")
 		;
 
+	}
+
+	@Test
+	@DisplayName("장바구니 ids를 받아서 한번에 삭제할 수 있다")
+	void clear_cart() {
+		Cart cart1 = Cart.create(1L, 2L, 4);
+		Cart cart2 = Cart.create(1L, 3L, 4);
+		Cart cart3 = Cart.create(1L, 4L, 4);
+
+		cartJpaRepository.saveAll(List.of(cart1, cart2, cart3));
+
+		cartService.clearCart(new ClearCartCommand(List.of(cart1.getId(), cart2.getId())));
+
+		List<Cart> all = cartJpaRepository.findAll();
+		assertThat(all).hasSize(1);
 	}
 }

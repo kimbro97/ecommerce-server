@@ -27,7 +27,7 @@ import com.server.ecommerce.service.product.info.ProductInfo;
 import com.server.ecommerce.support.exception.BusinessException;
 
 @ExtendWith(MockitoExtension.class)
-class ProductServiceUnitTest {
+class ProductServiceTest {
 
 	@Mock
 	private ProductRepository productRepository;
