@@ -57,7 +57,7 @@ public class ProductJpaRepositoryImpl implements ProductJpaRepositoryCustom {
 	public List<Product> findAllByIdsWithLock(List<Long> ids) {
 		return queryFactory.selectFrom(product)
 			.where(product.id.in(ids))
-			.setLockMode(LockModeType.PESSIMISTIC_READ)
+			.setLockMode(LockModeType.PESSIMISTIC_WRITE)
 			.fetch();
 	}
 
