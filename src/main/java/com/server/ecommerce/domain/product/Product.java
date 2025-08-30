@@ -14,6 +14,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,6 +24,12 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(indexes = {
+	@Index(name = "idx_product_category_createdAt", columnList = "category, created_at"),
+	@Index(name = "idx_product_name", columnList = "name"),
+	@Index(name = "idx_product_price", columnList = "price"),
+	@Index(name = "idx_product_createAt", columnList = "created_at")
+})
 public class Product extends BaseEntity {
 
 	@Id
