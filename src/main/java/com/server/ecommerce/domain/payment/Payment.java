@@ -16,9 +16,9 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @Table(indexes = {
-	@Index(name = "idx_order_user_id", columnList = "user_id"),
-	@Index(name = "idx_order_order_id", columnList = "order_id"),
-	@Index(name = "idx_order_transaction_id", columnList = "transaction_id"),
+	@Index(name = "idx_payment_user_id", columnList = "user_id"),
+	@Index(name = "idx_payment_order_id", columnList = "order_id"),
+	@Index(name = "idx_payment_transaction_id", columnList = "transaction_id"),
 })
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Payment {
