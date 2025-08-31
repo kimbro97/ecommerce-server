@@ -10,8 +10,10 @@ public interface CartRepository {
 	Optional<Cart> findById(Long cartId);
 	Optional<Cart> findByProductId(Long productId);
 	Optional<Cart> findByUserIdAndProductId(Long userId, Long productId);
+	Optional<Cart> findByUserIdAndProductIdWithLock(Long userId, Long productId);
 	List<CartWithProductDto> findAllByUserId(Long userId);
 	Optional<Cart> findByUserIdAndCartId(Long userId, Long cartId);
+	Optional<Cart> findByUserIdAndCartIdWithLock(Long userId, Long cartId);
 	void deleteByUserIdAndCartId(Long userId, Long cartId);
 
 	void deleteByIds(List<Long> cartIds);

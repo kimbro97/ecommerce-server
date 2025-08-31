@@ -12,6 +12,7 @@ public enum BusinessError {
 	PRODUCT_CATEGORY_NOT_VALID(BAD_REQUEST, "유효하지않은 카테고리값입니다"),
 	CART_QUANTITY_INVALID(BAD_REQUEST, "유효하지 않은 수량입니다"),
 	CART_NOT_FOUND(NOT_FOUND, "해당 장바구니를 찾을 수 없습니다"),
+	CART_ALREADY_EXISTS(BAD_REQUEST, "이미 장바구니에 담긴 상품입니다"),
 	PRODUCT_NOT_FOUND(NOT_FOUND, "해당 상품을 찾을 수 없습니다"),
 	PRODUCT_OUT_OF_STOCK(BAD_REQUEST, "상품이 품절되었습니다"),
 	ORDER_LIEN_IS_EMPTY(NOT_FOUND, "주문 항목을 찾을 수 없습니다"),

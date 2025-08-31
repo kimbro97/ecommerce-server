@@ -5,6 +5,7 @@ import static com.server.ecommerce.support.exception.BusinessError.*;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +31,7 @@ public class CartService {
 
 		// 유저 유효성 검사
 
-		Optional<Cart> existCart = cartRepository.findByUserIdAndProductId(command.getUserId(),
+		Optional<Cart> existCart = cartRepository.findByUserIdAndProductIdWithLock(command.getUserId(),
 			command.getProductId());
 
 		if (existCart.isPresent()) {
@@ -40,9 +41,13 @@ public class CartService {
 			return CartInfo.from(cart);
 		}
 
-		Cart newCart = Cart.create(command.getUserId(), command.getProductId(), command.getQuantity());
-		cartRepository.save(newCart);
-		return CartInfo.from(newCart) ;
+		try {
+			Cart newCart = Cart.create(command.getUserId(), command.getProductId(), command.getQuantity());
+			cartRepository.save(newCart);
+			return CartInfo.from(newCart);
+		} catch (DataIntegrityViolationException e) {
+			throw CART_ALREADY_EXISTS.exception();
+		}
 	}
 
 	public List<CartWithProductInfo> findCarts(Long userId) {
@@ -74,7 +79,7 @@ public class CartService {
 
 		// 유저 유효성 검사
 
-		Cart cart = cartRepository.findByUserIdAndCartId(command.getUserId(), command.getCartId())
+		Cart cart = cartRepository.findByUserIdAndCartIdWithLock(command.getUserId(), command.getCartId())
 			.orElseThrow(CART_NOT_FOUND::exception);
 
 		cart.updateQuantity(command.getQuantity());
@@ -82,6 +87,7 @@ public class CartService {
 		return CartInfo.from(cart);
 	}
 
+	@Transactional
 	public void clearCart(ClearCartCommand command) {
 		cartRepository.deleteByIds(command.getCartIds());
 	}
