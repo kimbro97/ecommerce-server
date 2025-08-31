@@ -1,4 +1,4 @@
-package com.server.ecommerce.service.cart;
+package com.server.ecommerce.service.cart.command;
 
 import lombok.Getter;
 

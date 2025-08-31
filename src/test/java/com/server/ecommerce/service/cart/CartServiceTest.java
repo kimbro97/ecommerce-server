@@ -18,6 +18,8 @@ import com.server.ecommerce.domain.product.ProductCategory;
 import com.server.ecommerce.infra.cart.CartJpaRepository;
 import com.server.ecommerce.infra.product.ProductJpaRepository;
 import com.server.ecommerce.service.cart.command.AddCartCommand;
+import com.server.ecommerce.service.cart.command.ClearCartCommand;
+import com.server.ecommerce.service.cart.command.DeleteCartCommand;
 import com.server.ecommerce.service.cart.command.UpdateCartCommand;
 import com.server.ecommerce.service.cart.info.CartInfo;
 import com.server.ecommerce.service.cart.info.CartWithProductInfo;
@@ -245,13 +247,16 @@ class CartServiceTest {
 	@Test
 	@DisplayName("장바구니 ids를 받아서 한번에 삭제할 수 있다")
 	void clear_cart() {
+
+		Long userId = 1L;
+
 		Cart cart1 = Cart.create(1L, 2L, 4);
 		Cart cart2 = Cart.create(1L, 3L, 4);
 		Cart cart3 = Cart.create(1L, 4L, 4);
 
 		cartJpaRepository.saveAll(List.of(cart1, cart2, cart3));
 
-		cartService.clearCart(new ClearCartCommand(List.of(cart1.getId(), cart2.getId())));
+		cartService.clearCart(new ClearCartCommand(userId, List.of(cart1.getId(), cart2.getId())));
 
 		List<Cart> all = cartJpaRepository.findAll();
 		assertThat(all).hasSize(1);
