@@ -38,6 +38,11 @@ public class CartRepositoryImpl implements CartRepository {
 	}
 
 	@Override
+	public Optional<Cart> findByUserIdAndProductIdWithLock(Long userId, Long productId) {
+		return cartJpaRepository.findByUserIdAndProductIdWithLock(userId, productId);
+	}
+
+	@Override
 	public List<CartWithProductDto> findAllByUserId(Long userId) {
 		return cartJpaRepository.findCartListWithProductByUserId(userId);
 	}
@@ -46,6 +51,10 @@ public class CartRepositoryImpl implements CartRepository {
 		return cartJpaRepository.findByUserIdAndId(userId, cartId);
 	}
 
+	@Override
+	public Optional<Cart> findByUserIdAndCartIdWithLock(Long userId, Long cartId) {
+		return cartJpaRepository.findByUserIdAndIdWithLock(userId, cartId);
+	}
 
 	@Override
 	public void deleteByUserIdAndCartId(Long userId, Long cartId) {

@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,10 +19,15 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(indexes = {
-	@Index(name = "idx_cart_user_id", columnList = "user_id"),
-	@Index(name = "idx_cart_product_id", columnList = "product_id"),
-})
+@Table(
+	indexes = {
+		@Index(name = "idx_cart_user_id", columnList = "user_id"),
+		@Index(name = "idx_cart_product_id", columnList = "product_id")
+	},
+	uniqueConstraints = {
+		@UniqueConstraint(name = "uk_cart_user_product", columnNames = {"user_id", "product_id"})
+	}
+)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Cart extends BaseEntity {
 
