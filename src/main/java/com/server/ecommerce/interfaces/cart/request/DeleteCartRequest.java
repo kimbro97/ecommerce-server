@@ -2,7 +2,7 @@ package com.server.ecommerce.interfaces.cart.request;
 
 import static com.server.ecommerce.support.exception.ValidationError.*;
 
-import com.server.ecommerce.service.cart.DeleteCartCommand;
+import com.server.ecommerce.service.cart.command.DeleteCartCommand;
 
 import lombok.Getter;
 

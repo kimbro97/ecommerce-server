@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.server.ecommerce.service.cart.CartService;
-import com.server.ecommerce.service.cart.ClearCartCommand;
+import com.server.ecommerce.service.cart.command.ClearCartCommand;
 import com.server.ecommerce.service.cart.info.CartWithProductInfo;
 import com.server.ecommerce.service.order.OrderProduct;
 import com.server.ecommerce.service.order.OrderService;
@@ -35,7 +35,7 @@ public class OrderFacade {
 	public OrderResult order(OrderCriteria criteria) {
 
 		// 카트조회
-		List<CartWithProductInfo> carts = cartService.findCarts(criteria.getUserId());
+		List<CartWithProductInfo> carts = cartService.findCartsWithoutCache(criteria.getUserId());
 		List<Long> productIds = carts.stream()
 			.map(CartWithProductInfo::getProductId)
 			.toList();
@@ -62,7 +62,7 @@ public class OrderFacade {
 		productService.decreaseStock(decreaseStockCommand);
 
 		// 카트 clear
-		cartService.clearCart(new ClearCartCommand(cartIds));
+		cartService.clearCart(new ClearCartCommand(criteria.getUserId(),cartIds));
 
 		// 주문완료 PAID
 		CompleteOrderCommand completeOrderCommand = new CompleteOrderCommand(orderInfo.getOrderId());

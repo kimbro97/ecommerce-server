@@ -5,6 +5,8 @@ import static com.server.ecommerce.support.exception.BusinessError.*;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +15,8 @@ import com.server.ecommerce.domain.cart.Cart;
 import com.server.ecommerce.domain.cart.CartRepository;
 import com.server.ecommerce.domain.cart.dto.CartWithProductDto;
 import com.server.ecommerce.service.cart.command.AddCartCommand;
+import com.server.ecommerce.service.cart.command.ClearCartCommand;
+import com.server.ecommerce.service.cart.command.DeleteCartCommand;
 import com.server.ecommerce.service.cart.command.UpdateCartCommand;
 import com.server.ecommerce.service.cart.info.CartInfo;
 import com.server.ecommerce.service.cart.info.CartWithProductInfo;
@@ -27,6 +31,7 @@ public class CartService {
 	private final CartRepository cartRepository;
 
 	@Transactional
+	@CacheEvict(cacheNames = "findCarts", key = "'carts:user:' + #command.userId")
 	public CartInfo addCart(AddCartCommand command) {
 
 		// 유저 유효성 검사
@@ -50,18 +55,18 @@ public class CartService {
 		}
 	}
 
+	@Cacheable(cacheNames = "findCarts", key = "'carts:user:' + #userId", cacheManager = "cartCacheManager")
 	public List<CartWithProductInfo> findCarts(Long userId) {
 
-		// 유저 유효성 검사
+		return getCartWithProductInfos(userId);
+	}
 
-		List<CartWithProductDto> carts = cartRepository.findAllByUserId(
-			userId);
-		return carts.stream()
-			.map(CartWithProductInfo::from)
-			.toList();
+	public List<CartWithProductInfo> findCartsWithoutCache(Long userId) {
+		return getCartWithProductInfos(userId);
 	}
 
 	@Transactional
+	@CacheEvict(cacheNames = "findCarts", key = "'carts:user:' + #command.userId")
 	public CartInfo deleteCart(DeleteCartCommand command) {
 
 		// 유저 유효성 검사
@@ -75,6 +80,7 @@ public class CartService {
 	}
 
 	@Transactional
+	@CacheEvict(cacheNames = "findCarts", key = "'carts:user:' + #command.userId")
 	public CartInfo updateCart(UpdateCartCommand command) {
 
 		// 유저 유효성 검사
@@ -88,7 +94,18 @@ public class CartService {
 	}
 
 	@Transactional
+	@CacheEvict(cacheNames = "findCarts", key = "'carts:user:' + #command.userId")
 	public void clearCart(ClearCartCommand command) {
 		cartRepository.deleteByIds(command.getCartIds());
+	}
+
+	private List<CartWithProductInfo> getCartWithProductInfos(Long userId) {
+		// 유저 유효성 검사
+
+		List<CartWithProductDto> carts = cartRepository.findAllByUserId(
+			userId);
+		return carts.stream()
+			.map(CartWithProductInfo::from)
+			.toList();
 	}
 }
